@@ -7,11 +7,11 @@ import random
 
 #### temp_id, temp_pw, temp_std_num#####
 
-temp_id = 'qkrrjsgk79'  ##자신의 아이디를 입력하세요
-temp_pw = '@pk3721204'  ##자신의 비밀번호를 입력하세요
-temp_std_num = '2018112874'  ##자신의 학번을 입력하세요
+temp_id = ''  ##자신의 아이디를 입력하세요
+temp_pw = ''  ##자신의 비밀번호를 입력하세요
+temp_std_num = ''  ##자신의 학번을 입력하세요
 select_sukku_num = [1,2,3,4]  ##예를 들어 수꾸목록의 첫번째, 세번째 과목을 수강신청해야하면 [1,3] 같이 써주시면 됩니다. ++8까지 가능합니다.
-refresh_limit = 10
+refresh_limit = 1000 # 새로고침횟수 제한
 
 # 시간반환 함수
 def time_small():
