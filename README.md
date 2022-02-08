@@ -3,6 +3,7 @@
 ## python sugangshichung.py
 ## Ctrl+C로 종료
 
+pip install selenium
 셀레니움 참조   
 > https://selenium-python.readthedocs.io/index.html
 > https://greeksharifa.github.io/references/2020/10/30/python-selenium-usage/
