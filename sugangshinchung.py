@@ -1,17 +1,36 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import urllib.request
 import sys
 import time
 import random
 
+
 #### temp_id, temp_pw, temp_std_num#####
 
-temp_id = ''  ##자신의 아이디를 입력하세요
-temp_pw = ''  ##자신의 비밀번호를 입력하세요
-temp_std_num = ''  ##자신의 학번을 입력하세요
-select_sukku_num = [1,2,3,4]  ##예를 들어 수꾸목록의 첫번째, 세번째 과목을 수강신청해야하면 [1,3] 같이 써주시면 됩니다. ++8까지 가능합니다.
+temp_id = 'qkrrjsgk79'  ##자신의 아이디를 입력하세요
+temp_pw = '@pk3721204'  ##자신의 비밀번호를 입력하세요
+temp_std_num = '2018112874'  ##자신의 학번을 입력하세요
+select_sukku_num = [1,2]  ##예를 들어 수꾸목록의 첫번째, 세번째 과목을 수강신청해야하면 [1,3] 같이 써주시면 됩니다. ++8까지 가능합니다.
 refresh_limit = 1000 # 새로고침횟수 제한
+
+# 카운터 변수
+web_repeated=1
+refresh_cnt=1
+
+# 서버시간 판단
+month = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06', \
+    'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'}
+def get_severtime(url) : 
+    date = urllib.request.urlopen(url).headers['Date'][5:-4]
+    d, m, y, hour, min, sec = date[:2], month[date[3:6]], date[7:11], date[12:14], date[15:17], date[18:]
+    print(f'[{url}]의 서버시간\n{y}년 {m}월 {d}일 {hour}시 {min}분 {sec}초')
+    #date = urllib.request.urlopen('http://www.google.com').headers['Date']
+    #print(date)
+    #now = time.strptime(date, '%a, %d %,"b %Y %H:%M:%S %Z')
+    #print(now)
+    return {"hour":hour,"min":min,"sec":sec}
 
 # 시간반환 함수
 def time_small():
@@ -39,7 +58,7 @@ def submit(_xpath):
         element = WebDriverWait(driver, 600).until(EC.alert_is_present()) ## alert메세지가 올 때까지 최대 600초까지 기다림.
         print(element.text) # 객체를 받으면 text를 반환, 받지 못하면 예외처리 
         if "신청되었습" in element.text :
-            print("신청성공\n")    
+            print("신청성공\n")
         else :
             print("신청실패\n")
         element.accept()
@@ -53,18 +72,29 @@ driver.get("https://sugang.knu.ac.kr/Sugang/comm/support/login/loginForm.action?
 
 grid_name = ['lectPackReqGrid_0', 'lectPackReqGrid_1','lectPackReqGrid_2','lectPackReqGrid_3','lectPackReqGrid_4','lectPackReqGrid_5','lectPackReqGrid_6', 'lectPackReqGrid_7']
 
-web_repeated=1
-clicked_cnt=1
+
 try:
     while(1):
+        # 서버타임 확인
+        serverTime=get_severtime("https://sugang.knu.ac.kr")
+        print(str(serverTime))
+        print(serverTime["hour"])
+        if(int(serverTime["hour"])==9) :
+            left_min=60-int(serverTime["min"])
+            left_sec=60-int(serverTime["sec"])
+            print(f'접속까지 대기시간 : {left_min}분 {left_sec}초')
+            time.sleep(60*left_min+left_sec)
+
         # 웹 로드까지 대기
         driver.implicitly_wait(time_to_wait=1) 
+
         # 팝업 윈도우 닫고 원래 창으로 포커스 옮기기
         for i in range(len(driver.window_handles)) :
             if(i>=1) :
                 driver.switch_to.window(driver.window_handles[i]) 
                 driver.close()
         driver.switch_to.window(driver.window_handles[0])
+
         # 웹 로드 후 로그인 시도
         now = time.time()
         driver.find_element_by_xpath('//*[@id="user.stu_nbr"]').send_keys(temp_std_num) #사이트에 학번 입력
@@ -98,7 +128,7 @@ try:
         #lectPackReqGrid_0, lectPackReqGrid_1,  lectPackReqGrid_2 ...
 
             for _ in range(refresh_limit): ## 반복횟수 조절 가능 , 
-                time.sleep(0.5)
+                time.sleep(0.25)
                 for skku_num in select_sukku_num:
                     if skku_num == 1:
                         if(check_empty(driver, grid_name[skku_num-1])):
@@ -124,8 +154,8 @@ try:
                     elif skku_num == 8:
                         if (check_empty(driver, grid_name[skku_num - 1])):
                             submit('//*[@id="lectPackReqGrid_7"]/td[11]/a')
-                print("현재 반복 : {}".format(clicked_cnt))
-                clicked_cnt=clicked_cnt+1 
+                print("현재 반복 : {}".format(refresh_cnt))
+                refresh_cnt=refresh_cnt+1 
                 driver.refresh()
 
 
@@ -140,6 +170,6 @@ try:
                 
 except :
     print("총 로그인 횟수 : " +str(web_repeated))
-    print("총 클릭 횟수 : " +str(clicked_cnt))    
+    print("총 새로고침 횟수 : " +str(refresh_cnt))    
     driver.quit()
     sys.exit()
