@@ -1,0 +1,83 @@
+
+    # from selenium.webdriver.common.keys import Keys
+    # alert메세지가 올 때까지 최대 0.6초까지 기다림.
+    # login_alert_element = WebDriverWait(
+    #     driver, timeout=1, poll_frequency=0.01).until(EC.alert_is_present())
+
+    # if login_alert_element != None:
+    #     print(login_alert_element.text)  # 객체를 받으면 text를 반환, 받지 못하면 예외처리
+    #     print("로그인실패\n")
+    #     break
+    # else:
+    #     print("로그인성공\n")
+
+    # legacy
+    # def get_severtime(url) :
+    #     date = urllib.request.urlopen(url).headers['Date'][5:-4]
+    #     d, m, y, hour, min, sec = date[:2], month[date[3:6]], date[7:11], date[12:14], date[15:17], date[18:]
+    #     print(f'[{url}]의 서버시간\n{y}년 {m}월 {d}일 {hour}시 {min}분 {sec}초')
+    #     #date = urllib.request.urlopen('http://www.google.com').headers['Date']
+    #     #print(date)
+    #     #now = time.strptime(date, '%a, %d %,"b %Y %H:%M:%S %Z')
+    #     #print(now)
+    #     return {"hour":hour,"min":min,"sec":sec}
+
+    # 서버타임 확인
+    # serverTime=get_severtime("https://sugang.knu.ac.kr/login.knu")
+    # print(str(serverTime))
+    # print(serverTime["hour"])
+    # if(int(serverTime["hour"])==9) :
+    #     left_min=60-int(serverTime["min"])
+    #     left_sec=60-int(serverTime["sec"])
+    #     print(f'접속까지 대기시간 : {left_min}분 {left_sec}초')
+    #     time.sleep(60*left_min+left_sec)
+
+# try :
+    #     element = WebDriverWait(driver, 0.6).until(EC.alert_is_present()) ## alert메세지가 올 때까지 최대 0.6초까지 기다림.
+    #     print(element.text) # 객체를 받으면 text를 반환, 받지 못하면 예외처리
+    #     status = True
+    #     print("Yes alert") #alert가 있으면 yes alert 출력
+    # except :
+    #     status = False
+    #     print("No alert") #alert 없으면 no alert 출력
+
+
+# 서버시간 판단
+# month = {'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
+#          'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'}
+
+
+# def time_small():
+#     return random.random()/10+0.01
+
+
+# # 팝업 윈도우 닫고 원래 창으로 포커스 옮기기
+# for i in range(len(driver.window_handles)) :
+#     if(i>=1) :
+#         driver.switch_to.window(driver.window_handles[i])
+#         driver.close()
+# driver.switch_to.window(driver.window_handles[0])
+
+# # 경고창 확인
+# status = False  # False이면 Alert 메세지가 없음
+# if status:  # AlertText가 있을 경우 종료.
+#     print("로그인 실패 : exit")
+#     driver.quit()
+#     sys.exit()
+# else:  # 없을 경우 로그인
+#     print("로그인 성공 : Login")
+    # driver.execute_script("arguments[0].click();", submit_element)
+
+# driver.find_element(
+    #     By.XPATH, '/html/body/div[3]/div/div/div[1]/div/div[2]/div[2]/input').send_keys(TEMP_STD_ID)  # 사이트에 아이디 입력
+    # driver.find_element(
+    #     By.XPATH, '/html/body/div[3]/div/div/div[1]/div/div[2]/div[3]/input').send_keys(TEMP_STD_PW)  # 사이트에 비밀번호 입력
+
+# except exceptions.UnexpectedAlertPresentException:
+#             driver.refresh()
+#             driver.find_element(
+#                 By.XPATH, '/html/body/div[2]/div[1]/div/div/div/ul/li[4]/a').click()  # 로그아웃
+# except exceptions.TimeoutException:
+#     driver.refresh()
+#     driver.find_element(
+#         By.XPATH, '/html/body/div[2]/div[1]/div/div/div/ul/li[4]/a').click()  # 로그아웃
