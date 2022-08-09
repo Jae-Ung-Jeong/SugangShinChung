@@ -1,3 +1,7 @@
+# version 0.2
+## last update 220810 04:10
+### seunmul
+
 from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,11 +21,12 @@ TEMP_STD_PW = '@pk3721204'  # 자신의 비밀번호를 입력하세요
 ## 2022.08.09 수강신청 사이트 변경 이후로 수강신청횟수에 따라 테이블이 재정렬 됩니다.
 ## 이에 따라 수강 꾸러미에 담긴 과목 개수를 적어주시기 바라며,
 ## 프로세스가 지속되는 동안에는 리스트가 최신화되나, 
-## 실행 프로세스가 종료되었을 때 신청된 과목이 있다면, 과목 숫자를 다시 확인하여 입력해주시기 바랍니다.
+## 실행 프로세스가 종료되었을 때 신청된 과목이 있다면, 수강꾸러미 내 과목 숫자를 다시 확인하고 입력해주시기 바랍니다.
 ## 안그러면 실행은 될 수 있으나 제대로 돌아가지 않습니다.
-sukku_list_num = 3
+sukku_list_num = 3 # 수강꾸러미에 대학글쓰기, 논리와 비판적 사고, 캠핑 3과목이 있으면 '3'을 입력해주시면 됩니다.
 
 # 새로고침횟수 제한
+## 컴퓨터 환경에 따라 한 세션에 머무를 새로고침횟수를 적어주시면 됩니다.
 refresh_limit = 2000
 
 # 카운터 변수
@@ -40,9 +45,13 @@ refresh_cnt = 1
 POLL_FREQ = 0.001
 CLK_BTN_FRQ = 0.1
 
+# 사이트 url
+## 사이트 주소 바뀌면 업데이트 ㄱㄱ
 url = "https://sugang.knu.ac.kr/login.knu"
 
 
+
+#### -----------program codes-------------- ####
 def check_empty(driver, skku_num):  # 수강인원 비었는지 체크
     limit_personnel, sugang_personnel, sub_name = \
         WebDriverWait(driver, timeout=10, poll_frequency=POLL_FREQ).until(
@@ -55,7 +64,7 @@ def check_empty(driver, skku_num):  # 수강인원 비었는지 체크
             By.XPATH, '/html/body/div[3]/div[1]/div[5]/div[2]/div/table/tbody/tr[%d]/td[4]' % (skku_num)).get_attribute('innerText')
     print(sub_name + "\t[ 제한인원 :" + limit_personnel +
           "\t수강인원 :" + sugang_personnel + ' ]', end=" ")
-    return True 
+    
     if limit_personnel <= sugang_personnel:
         print(": 신청불가")
         return False
@@ -71,7 +80,6 @@ def submit(driver, _xpath, skku_num):  # 수강신청 처리
             (By.XPATH, str(_xpath))))
     time.sleep(CLK_BTN_FRQ)
     print("클릭")
-    # driver.execute_script("arguments[0].click();", submit_element)
     submit_element.click()
     try:
         # alert메세지가 올 때까지 최대 600초까지 기다림.
@@ -194,13 +202,10 @@ if __name__ == '__main__':
             driver.find_element(
                 By.XPATH, '/html/body/div[2]/div[1]/div/div/div/ul/li[4]/a').click()  # 로그아웃
             continue
-        except exceptions.UnexpectedAlertPresentException:
+        except exceptions.UnexpectedAlertPresentException as e:
             print("경고창 에러")
-            alert_element = WebDriverWait(driver, timeout=600, poll_frequency=POLL_FREQ).until(
-                EC.alert_is_present())
-            alert_element.accept()
-            driver.find_element(
-                By.XPATH, '/html/body/div[2]/div[1]/div/div/div/ul/li[4]/a').click()  # 로그아웃
+            print(e)
+            driver = restart(driver, options, url)
             continue
         except Exception as e:
             print("언노운 에러")
