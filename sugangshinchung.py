@@ -14,9 +14,9 @@ import sys
 import time
 
 #### temp_id, temp_pw, temp_std_num#####
-TEMP_STD_NUM = '2018112874'  # 자신의 학번을 입력하세요
-TEMP_STD_ID = 'qkrrjsgk79'  # 자신의 아이디를 입력하세요
-TEMP_STD_PW = '@pk3721204'  # 자신의 비밀번호를 입력하세요
+TEMP_STD_NUM = ''  # 자신의 학번을 입력하세요
+TEMP_STD_ID = ''  # 자신의 아이디를 입력하세요
+TEMP_STD_PW = ''  # 자신의 비밀번호를 입력하세요
 
 ## 2022.08.09 수강신청 사이트 변경 이후로 수강신청횟수에 따라 테이블이 재정렬 됩니다.
 ## 이에 따라 수강 꾸러미에 담긴 과목 개수를 적어주시기 바라며,
@@ -139,7 +139,7 @@ def restart(driver, options, url):
     driver.get(str(url))
     return driver
 
-
+###### -----main------ ######
 if __name__ == '__main__':
     
     now = time.time()
