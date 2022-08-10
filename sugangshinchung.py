@@ -143,7 +143,7 @@ def restart(driver, options, url):
 if __name__ == '__main__':
     
     now = time.time()
-    sukku_list = []
+    sukku_list = []2
     for i in range(1,sukku_list_num+1) :
         
         sukku_list.append(i) 
